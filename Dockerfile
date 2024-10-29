@@ -19,6 +19,8 @@ RUN wget https://wordpress.org/latest.zip && \
 
 VOLUME /var/www/html/wordpress
 
+ENV AUTO_INDEX on
+
 RUN wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip && \
     unzip phpMyAdmin-latest-all-languages.zip && \
     mv phpMyAdmin-*-all-languages /var/www/html/phpmyadmin && \
@@ -39,4 +41,9 @@ RUN a2enmod ssl && \
 EXPOSE 80 443
 
 CMD service mysql start && \
+    if [ "$AUTO_INDEX" = "on" ]; then \
+        sed -i 's/Options Indexes FollowSymLinks/Options FollowSymLinks/' /etc/apache2/apache2.conf; \
+    else \
+        sed -i 's/Options FollowSymLinks/Options Indexes FollowSymLinks/' /etc/apache2/apache2.conf; \
+    fi && \
     apachectl -D FOREGROUND
