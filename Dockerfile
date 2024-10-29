@@ -17,6 +17,8 @@ RUN wget https://wordpress.org/latest.zip && \
     mv wordpress /var/www/html/ && \
     chown -R www-data:www-data /var/www/html/wordpress
 
+VOLUME /var/www/html/wordpress
+
 RUN wget https://www.phpmyadmin.net/downloads/phpMyAdmin-latest-all-languages.zip && \
     unzip phpMyAdmin-latest-all-languages.zip && \
     mv phpMyAdmin-*-all-languages /var/www/html/phpmyadmin && \
@@ -37,5 +39,4 @@ RUN a2enmod ssl && \
 EXPOSE 80 443
 
 CMD service mysql start && \
-    mysql -u user -ppassword wordpress < /wordpress.sql && \
     apachectl -D FOREGROUND
